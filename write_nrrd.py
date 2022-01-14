@@ -12,31 +12,37 @@ def remove_artifacts(mask):
 
 
 def write_nrrd(file_name, imgs):
-    # normalize imgs
-    # TODO
+    imgs = (imgs.T / 255.).astype(np.float32)
 
-    # set header
-    # TODO
 
-    # write nrrd file
-    # nrrd.write(file_name, imgs, header)
-    # TODO
+
+    header = {
+
+        'space directions': np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
+
+        'space origin': [0, 0, 0]
+
+    }
+
+
+
+    nrrd.write(file_name, imgs, header)
 
 
 def write_pred_nrrd(img_dir, file_name):
     '''write out single nrrd file by predict images'''
 
-    # sorted img files
-    # TODO
+    img_fs = list_sorted_dir(img_dir)
 
-    # read imgs and remove artifacts
-    # TODO
 
-    # reverse imgs
-    # TODO
 
-    # write out nrrd file
-    # TODO
+    imgs = np.array([remove_artifacts(np.array(Image.open(os.path.join(img_dir, img_f)))) for img_f in img_fs])
+
+    imgs = np.flip(imgs, 0)  # reverse
+
+
+
+    write_nrrd(file_name, imgs)
 
 
 if __name__ == '__main__':
